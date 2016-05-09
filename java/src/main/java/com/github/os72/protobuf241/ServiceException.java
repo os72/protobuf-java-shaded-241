@@ -28,34 +28,25 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
-//
-// A proto file which is imported by unittest.proto to test importing.
+package com.github.os72.protobuf241;
 
+/**
+ * Thrown by blocking RPC methods when a failure occurs.
+ *
+ * @author cpovirk@google.com (Chris Povirk)
+ */
+public class ServiceException extends Exception {
+  private static final long serialVersionUID = -1219262335729891920L;
 
-// We don't put this in a package within proto2 because we need to make sure
-// that the generated code doesn't depend on being in the proto2 namespace.
-// In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
+  public ServiceException(final String message) {
+    super(message);
+  }
 
-option optimize_for = SPEED;
+  public ServiceException(final Throwable cause) {
+    super(cause);
+  }
 
-// Excercise the java_package option.
-option java_package = "com.github.os72.protobuf241.test";
-
-// Do not set a java_outer_classname here to verify that Proto2 works without
-// one.
-
-message ImportMessage {
-  optional int32 d = 1;
+  public ServiceException(final String message, final Throwable cause) {
+    super(message, cause);
+  }
 }
-
-enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
-}
-

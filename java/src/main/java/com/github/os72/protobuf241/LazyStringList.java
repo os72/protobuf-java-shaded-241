@@ -28,34 +28,45 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
-//
-// A proto file which is imported by unittest.proto to test importing.
+package com.github.os72.protobuf241;
 
+import java.util.List;
 
-// We don't put this in a package within proto2 because we need to make sure
-// that the generated code doesn't depend on being in the proto2 namespace.
-// In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
+/**
+ * An interface extending List&lt;String&gt; that also provides access to the
+ * items of the list as UTF8-encoded ByteString objects. This is used by the
+ * protocol buffer implementation to support lazily converting bytes parsed
+ * over the wire to String objects until needed and also increases the
+ * efficiency of serialization if the String was never requested as the
+ * ByteString is already cached.
+ * <p>
+ * This only adds additional methods that are required for the use in the
+ * protocol buffer code in order to be able successfuly round trip byte arrays
+ * through parsing and serialization without conversion to strings. It's not
+ * attempting to support the functionality of say List&ltByteString&gt, hence
+ * why only these two very specific methods are added.
+ *
+ * @author jonp@google.com (Jon Perlow)
+ */
+public interface LazyStringList extends List<String> {
 
-option optimize_for = SPEED;
+  /**
+   * Returns the element at the specified position in this list as a ByteString.
+   *
+   * @param index index of the element to return
+   * @return the element at the specified position in this list
+   * @throws IndexOutOfBoundsException if the index is out of range
+   *         (<tt>index &lt; 0 || index &gt;= size()</tt>)
+   */
+  ByteString getByteString(int index);
 
-// Excercise the java_package option.
-option java_package = "com.github.os72.protobuf241.test";
-
-// Do not set a java_outer_classname here to verify that Proto2 works without
-// one.
-
-message ImportMessage {
-  optional int32 d = 1;
+  /**
+   * Appends the specified element to the end of this list (optional
+   * operation).
+   *
+   * @param element element to be appended to this list
+   * @throws UnsupportedOperationException if the <tt>add</tt> operation
+   *         is not supported by this list
+   */
+  void add(ByteString element);
 }
-
-enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
-}
-

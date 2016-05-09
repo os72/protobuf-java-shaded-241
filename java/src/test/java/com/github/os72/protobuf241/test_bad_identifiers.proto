@@ -28,34 +28,43 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
-//
-// A proto file which is imported by unittest.proto to test importing.
+// Author: jonp@google.com (Jon Perlow)
+
+// This file tests that various identifiers work as field and type names even
+// though the same identifiers are used internally by the java code generator.
 
 
-// We don't put this in a package within proto2 because we need to make sure
-// that the generated code doesn't depend on being in the proto2 namespace.
-// In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
+// Some generic_services option(s) added automatically.
+// See:  http://go/proto2-generic-services-default
+option java_generic_services = true;   // auto-added
 
-option optimize_for = SPEED;
+package io_protocol_tests;
 
-// Excercise the java_package option.
-option java_package = "com.github.os72.protobuf241.test";
+option java_package = "com.github.os72.protobuf241";
+option java_outer_classname = "TestBadIdentifiersProto";
 
-// Do not set a java_outer_classname here to verify that Proto2 works without
-// one.
-
-message ImportMessage {
-  optional int32 d = 1;
+message TestMessage {
 }
 
-enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
+message Deprecated {
+  enum TestEnum {
+    FOO = 1;
+  }
+
+  optional int32 field1 = 1 [deprecated=true];
+  optional TestEnum field2 = 2 [deprecated=true];
+  optional TestMessage field3 = 3 [deprecated=true];
+}
+
+message Override {
+  optional int32 override = 1;
+}
+
+message Object {
+  optional int32 object = 1;
+}
+
+service TestConflictingMethodNames {
+  rpc Override(TestMessage) returns (TestMessage);
 }
 

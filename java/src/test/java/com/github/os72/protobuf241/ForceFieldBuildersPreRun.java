@@ -28,34 +28,21 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
-//
-// A proto file which is imported by unittest.proto to test importing.
+package com.github.os72.protobuf241;
 
+/**
+ * A prerun for a test suite that allows running the full protocol buffer
+ * tests in a mode that disables the optimization for not using
+ * {@link RepeatedFieldBuilder} and {@link SingleFieldBuilder} until they are
+ * requested. This allows us to run all the tests through both code paths
+ * and ensures that both code paths produce identical results.
+ *
+ * @author jonp@google.com (Jon Perlow)
+ */
+public class ForceFieldBuildersPreRun implements Runnable {
 
-// We don't put this in a package within proto2 because we need to make sure
-// that the generated code doesn't depend on being in the proto2 namespace.
-// In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
-
-option optimize_for = SPEED;
-
-// Excercise the java_package option.
-option java_package = "com.github.os72.protobuf241.test";
-
-// Do not set a java_outer_classname here to verify that Proto2 works without
-// one.
-
-message ImportMessage {
-  optional int32 d = 1;
+  //@Override (Java 1.6 override semantics, but we must support 1.5)
+  public void run() {
+    GeneratedMessage.enableAlwaysUseFieldBuildersForTesting();
+  }
 }
-
-enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
-}
-

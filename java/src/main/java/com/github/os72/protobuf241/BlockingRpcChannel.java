@@ -28,34 +28,24 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
-//
-// A proto file which is imported by unittest.proto to test importing.
+package com.github.os72.protobuf241;
 
-
-// We don't put this in a package within proto2 because we need to make sure
-// that the generated code doesn't depend on being in the proto2 namespace.
-// In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
-
-option optimize_for = SPEED;
-
-// Excercise the java_package option.
-option java_package = "com.github.os72.protobuf241.test";
-
-// Do not set a java_outer_classname here to verify that Proto2 works without
-// one.
-
-message ImportMessage {
-  optional int32 d = 1;
+/**
+ * <p>Abstract interface for a blocking RPC channel.  {@code BlockingRpcChannel}
+ * is the blocking equivalent to {@link RpcChannel}.
+ *
+ * @author kenton@google.com Kenton Varda
+ * @author cpovirk@google.com Chris Povirk
+ */
+public interface BlockingRpcChannel {
+  /**
+   * Call the given method of the remote service and blocks until it returns.
+   * {@code callBlockingMethod()} is the blocking equivalent to
+   * {@link RpcChannel#callMethod}.
+   */
+  Message callBlockingMethod(
+      Descriptors.MethodDescriptor method,
+      RpcController controller,
+      Message request,
+      Message responsePrototype) throws ServiceException;
 }
-
-enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
-}
-

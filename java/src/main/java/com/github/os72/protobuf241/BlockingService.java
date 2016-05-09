@@ -28,34 +28,37 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
-//
-// A proto file which is imported by unittest.proto to test importing.
+package com.github.os72.protobuf241;
 
+/**
+ * Blocking equivalent to {@link Service}.
+ *
+ * @author kenton@google.com Kenton Varda
+ * @author cpovirk@google.com Chris Povirk
+ */
+public interface BlockingService {
+  /**
+   * Equivalent to {@link Service#getDescriptorForType}.
+   */
+  Descriptors.ServiceDescriptor getDescriptorForType();
 
-// We don't put this in a package within proto2 because we need to make sure
-// that the generated code doesn't depend on being in the proto2 namespace.
-// In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
+  /**
+   * Equivalent to {@link Service#callMethod}, except that
+   * {@code callBlockingMethod()} returns the result of the RPC or throws a
+   * {@link ServiceException} if there is a failure, rather than passing the
+   * information to a callback.
+   */
+  Message callBlockingMethod(Descriptors.MethodDescriptor method,
+                             RpcController controller,
+                             Message request) throws ServiceException;
 
-option optimize_for = SPEED;
+  /**
+   * Equivalent to {@link Service#getRequestPrototype}.
+   */
+  Message getRequestPrototype(Descriptors.MethodDescriptor method);
 
-// Excercise the java_package option.
-option java_package = "com.github.os72.protobuf241.test";
-
-// Do not set a java_outer_classname here to verify that Proto2 works without
-// one.
-
-message ImportMessage {
-  optional int32 d = 1;
+  /**
+   * Equivalent to {@link Service#getResponsePrototype}.
+   */
+  Message getResponsePrototype(Descriptors.MethodDescriptor method);
 }
-
-enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
-}
-

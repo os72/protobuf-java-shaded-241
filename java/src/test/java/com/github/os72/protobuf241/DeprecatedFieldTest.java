@@ -28,22 +28,53 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//
-// This is like unittest_import.proto but with optimize_for = LITE_RUNTIME.
+package com.github.os72.protobuf241;
 
-package protobuf_unittest_import;
+import protobuf_unittest.UnittestProto.TestDeprecatedFields;
 
-option optimize_for = LITE_RUNTIME;
+import junit.framework.TestCase;
 
-option java_package = "com.github.os72.protobuf241";
-
-message ImportMessageLite {
-  optional int32 d = 1;
-}
-
-enum ImportEnumLite {
-  IMPORT_LITE_FOO = 7;
-  IMPORT_LITE_BAR = 8;
-  IMPORT_LITE_BAZ = 9;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+/**
+ * Test field deprecation
+ * 
+ * @author birdo@google.com (Roberto Scaramuzzi)
+ */
+public class DeprecatedFieldTest extends TestCase {
+  private String[] deprecatedGetterNames = {
+      "hasDeprecatedInt32",
+      "getDeprecatedInt32"};
+  
+  private String[] deprecatedBuilderGetterNames = {
+      "hasDeprecatedInt32",
+      "getDeprecatedInt32",
+      "clearDeprecatedInt32"};
+  
+  private String[] deprecatedBuilderSetterNames = {
+      "setDeprecatedInt32"}; 
+  
+  public void testDeprecatedField() throws Exception {
+    Class<?> deprecatedFields = TestDeprecatedFields.class;
+    Class<?> deprecatedFieldsBuilder = TestDeprecatedFields.Builder.class;
+    for (String name : deprecatedGetterNames) {
+      Method method = deprecatedFields.getMethod(name);
+      assertTrue("Method " + name + " should be deprecated",
+          isDeprecated(method));
+    }
+    for (String name : deprecatedBuilderGetterNames) {
+      Method method = deprecatedFieldsBuilder.getMethod(name);
+      assertTrue("Method " + name + " should be deprecated",
+          isDeprecated(method));
+    }
+    for (String name : deprecatedBuilderSetterNames) {
+      Method method = deprecatedFieldsBuilder.getMethod(name, int.class);
+      assertTrue("Method " + name + " should be deprecated",
+          isDeprecated(method));
+    }
+  }
+  
+  private boolean isDeprecated(AnnotatedElement annotated) {
+    return annotated.isAnnotationPresent(Deprecated.class);
+  }
 }

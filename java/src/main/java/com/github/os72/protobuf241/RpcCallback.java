@@ -28,34 +28,20 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
-//
-// A proto file which is imported by unittest.proto to test importing.
+package com.github.os72.protobuf241;
 
-
-// We don't put this in a package within proto2 because we need to make sure
-// that the generated code doesn't depend on being in the proto2 namespace.
-// In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
-
-option optimize_for = SPEED;
-
-// Excercise the java_package option.
-option java_package = "com.github.os72.protobuf241.test";
-
-// Do not set a java_outer_classname here to verify that Proto2 works without
-// one.
-
-message ImportMessage {
-  optional int32 d = 1;
+/**
+ * Interface for an RPC callback, normally called when an RPC completes.
+ * {@code ParameterType} is normally the method's response message type.
+ *
+ * <p>Starting with version 2.3.0, RPC implementations should not try to build
+ * on this, but should instead provide code generator plugins which generate
+ * code specific to the particular RPC implementation.  This way the generated
+ * code can be more appropriate for the implementation in use and can avoid
+ * unnecessary layers of indirection.
+ *
+ * @author kenton@google.com Kenton Varda
+ */
+public interface RpcCallback<ParameterType> {
+  void run(ParameterType parameter);
 }
-
-enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
-}
-

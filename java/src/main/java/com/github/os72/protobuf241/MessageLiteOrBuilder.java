@@ -28,34 +28,31 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Author: kenton@google.com (Kenton Varda)
-//  Based on original Protocol Buffers design by
-//  Sanjay Ghemawat, Jeff Dean, and others.
-//
-// A proto file which is imported by unittest.proto to test importing.
+package com.github.os72.protobuf241;
 
+/**
+ * Base interface for methods common to {@link MessageLite}
+ * and {@link MessageLite.Builder} to provide type equivalency.
+ *
+ * @author jonp@google.com (Jon Perlow)
+ */
+public interface MessageLiteOrBuilder {
+  /**
+   * Get an instance of the type with no fields set. Because no fields are set,
+   * all getters for singular fields will return default values and repeated
+   * fields will appear empty.
+   * This may or may not be a singleton.  This differs from the
+   * {@code getDefaultInstance()} method of generated message classes in that
+   * this method is an abstract method of the {@code MessageLite} interface
+   * whereas {@code getDefaultInstance()} is a static method of a specific
+   * class.  They return the same thing.
+   */
+  MessageLite getDefaultInstanceForType();
 
-// We don't put this in a package within proto2 because we need to make sure
-// that the generated code doesn't depend on being in the proto2 namespace.
-// In test_util.h we do
-// "using namespace unittest_import = protobuf_unittest_import".
-package protobuf_unittest_import;
+  /**
+   * Returns true if all required fields in the message and all embedded
+   * messages are set, false otherwise.
+   */
+  boolean isInitialized();
 
-option optimize_for = SPEED;
-
-// Excercise the java_package option.
-option java_package = "com.github.os72.protobuf241.test";
-
-// Do not set a java_outer_classname here to verify that Proto2 works without
-// one.
-
-message ImportMessage {
-  optional int32 d = 1;
 }
-
-enum ImportEnum {
-  IMPORT_FOO = 7;
-  IMPORT_BAR = 8;
-  IMPORT_BAZ = 9;
-}
-
